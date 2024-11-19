@@ -1,0 +1,74 @@
+[{
+  "_id": {
+    "$oid": "673c1230d813e54d83e9f5c8"
+  },
+  "ProductID": "E001",
+  "Name": "Smartphone",
+  "Brand": "TechCorp",
+  "Price": 699.99,
+  "Specifications": {
+    "ScreenSize": "6.5 inches",
+    "BatteryLife": "24 hours",
+    "Storage": "128 GB",
+    "Camera": "12 MP"
+  }
+},
+{
+  "_id": {
+    "$oid": "673c1240d813e54d83e9f5ca"
+  },
+  "ProductID": "C001",
+  "Name": "T-Shirt",
+  "Size": "M",
+  "Color": "Blue",
+  "Material": "Cotton",
+  "Price": 19.99
+},
+{
+  "_id": {
+    "$oid": "673c1255d813e54d83e9f5cc"
+  },
+  "ProductID": "B001",
+  "Title": "Learning MongoDB",
+  "Author": "John Doe",
+  "Genre": "Technology",
+  "ISBN": "978-1234567890",
+  "Price": 29.99
+},
+{
+  "_id": {
+    "$oid": "673c129ad13352ef8d3eebcb"
+  },
+  "ProductID": "E001",
+  "Name": "Smartphone",
+  "Brand": "TechCorp",
+  "Price": 699.99,
+  "Specifications": {
+    "ScreenSize": "6.5 inches",
+    "BatteryLife": "24 hours",
+    "Storage": "128 GB",
+    "Camera": "12 MP"
+  }
+},
+{
+  "_id": {
+    "$oid": "673c12b1d13352ef8d3eebcc"
+  },
+  "ProductID": "C001",
+  "Name": "T-Shirt",
+  "Size": "M",
+  "Color": "Blue",
+  "Material": "Cotton",
+  "Price": 19.99
+},
+{
+  "_id": {
+    "$oid": "673c12c1d13352ef8d3eebcd"
+  },
+  "ProductID": "B001",
+  "Title": "Learning MongoDB",
+  "Author": "John Doe",
+  "Genre": "Technology",
+  "ISBN": "978-1234567890",
+  "Price": 29.99
+}]
