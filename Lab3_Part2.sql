@@ -6,59 +6,35 @@ select * from customers;
 
 
 -- Transaction Management with ACID Properties
-DELIMITER //
+-- ATOMICITY
+select * from orders;
 
-CREATE PROCEDURE PlaceOrder(
-    IN NEW_ORDER_ID INT, 
-    IN CUSTOMER_ID INT, 
-    IN TOTAL_AMOUNT DECIMAL(10,2)
-)
-BEGIN
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE current_product_id INT;
-    DECLARE current_quantity INT;
+-- Inserting a new record in the Orders table
+start transaction;
+insert into orders(orderID,customerID,productID,orderdate,quantity,total)
+values(5,1,101,'2024-11-01',2,60);
 
-    -- Declare cursor for fetching order items from a temporary table
-    DECLARE order_cursor CURSOR FOR SELECT ProductID, Quantity FROM TempOrderItems;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+-- Adding each item from the order into the OrderDetails table.
+insert into orderDetails(orderID,productID,quantity,price)
+values (5,101,2,
+(select price from orders where orderID = 5)
+);
 
-    -- Start transaction
-    START TRANSACTION;
+-- Maintaining database consistency before and after the transaction by updating product table.
+ -- Decreasing the quantity in stock for each item in the Products table
+update products
+set StockQuantity = StockQuantity - (select quantity from orderDetails where orderID = 5) 
+where productID = 101;
+ 
+rollback;
+-- Commit the transaction if all steps succeed
+commit;
 
-    -- Step 1: Insert a new order record
-    INSERT INTO orders (OrderID, CustomerID, OrderDate, Total)
-    VALUES (NEW_ORDER_ID, CUSTOMER_ID, NOW(), TOTAL_AMOUNT);
+select* from orders;
+select * from orderDetails;
 
-    OPEN order_cursor;
 
-    read_loop: LOOP
-        FETCH order_cursor INTO current_product_id, current_quantity;
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
-
-        -- Step 2: Add each item to the OrderDetails table
-        INSERT INTO OrderDetails (OrderID, ProductID, Quantity, Price)
-        VALUES (NEW_ORDER_ID, current_product_id, current_quantity, 
-                (SELECT Price FROM products WHERE ProductID = current_product_id));
-
-        -- Step 3: Decrease the quantity in stock for each product
-        UPDATE products
-        SET StockQuantity = StockQuantity - current_quantity
-        WHERE ProductID = current_product_id;
-
-        -- Check if the stock is sufficient
-        IF (SELECT StockQuantity FROM products WHERE ProductID = current_product_id) < 0 THEN
-            ROLLBACK;  -- Roll back the transaction if stock is insufficient
-            SELECT 'Transaction failed: Insufficient stock for ProductID ' AS ErrorMessage;
-            LEAVE read_loop;
-        END IF;
-    END LOOP;
-
-    CLOSE order_cursor;
-
-    -- Commit the transaction if all steps succeed
-    COMMIT;
-END //
-
-DELIMITER ;
+-- Ensuring that transactions are executed in isolation from one another.
+set transaction isolation level serializable;
+start transaction;
+select * from orders where orderID = 5;
