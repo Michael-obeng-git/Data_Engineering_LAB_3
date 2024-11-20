@@ -1,13 +1,15 @@
+-- PREVENTING CONCURRENCY ISSUE IN TECHCORP TRANSACTION
+
 use TechCorps;
 
 -- Transaction 1 (Alex's order) 
 start transaction;
+	select * from products where productID = 101 for update;
 
-select * from products where productID = 101 for update;
+	update products
+	set quantity = quantity - 5
+	where productID = 101;
 
-update products
-set quantity = quantity - 5
-where productID = 101;
 
 commit;
 
