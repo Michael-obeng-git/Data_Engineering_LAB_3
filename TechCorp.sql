@@ -38,6 +38,13 @@ CREATE TABLE orders (
   FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
 
+create table orderDetails(
+OrderID int references orders(OrderID),
+ProductID int references product(ProductID),
+quantity int,
+price decimal
+);
+
 -- Insertion of sample data
 INSERT INTO customers (CustomerID, CustomerName, CustomerEmail)
 VALUES
@@ -66,3 +73,10 @@ VALUES
   (002, 002, 102, '2023-11-02', 2, 1000),
   (003, 003, 103, '2024-11-02', 2, 50),
   (004, 004, 104, '2024-11-03', 1, 10);
+
+INSERT INTO orderDetails(orderID,productID,quantity,price)
+VALUES
+(
+  SELECT orderID,productID,quantity,price
+  FROM orders
+  )
